@@ -1,0 +1,28 @@
+{
+  "name": "hirelens",
+  "version": "1.0.0",
+  "description": "\"# HireLens\"",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IshitaBansal09/HireLens.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/IshitaBansal09/HireLens/issues"
+  },
+  "homepage": "https://github.com/IshitaBansal09/HireLens#readme",
+  "dependencies": {
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "mongoose": "^9.3.3",
+    "nodemon": "^3.1.14"
+  }
+}
