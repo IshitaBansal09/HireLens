@@ -108,6 +108,12 @@ async function loginUserController(req, res) {
 }
 
 // now creating logout controller function, which will be used to logout the user, and this function will clear the token from the cookies, and also add that token in the blacklist, so that it cannot be used again
+/**
+ * @name logoutUserController
+ * @description clear the token from cookies and add that token in blacklist, so that it cannot be used again
+ * @access public   
+ */
+
 async function logoutUserController(req, res){
     const token = req.cookies.token  // pehle token ko cookies se get krna hoga
     if(token){
@@ -119,8 +125,28 @@ async function logoutUserController(req, res){
     })
 }
 
+// now, creating getMeController function, which will be used to get the details of the logged in user, and this function will be protected, means only authenticated user can access this function, and this function will return the details of the logged in user
+/**
+ * @name getMeController
+ * @description Get the current logged in user's details
+ * @access Private
+ */
+
+async function getMeController(req, res){
+    const user = await userModel.findById(req.user.id)  // req.user => is the data which we'll get from middleware
+    res.status(200).json({
+        message : "User details retrieved successfully",
+        user: {
+            id: user._id,
+            username: user.username,
+            email: user.email
+        }
+    })
+}
+
 module.exports = {
     registerUserController,
     loginUserController,
-    logoutUserController
+    logoutUserController,
+    getMeController
 }

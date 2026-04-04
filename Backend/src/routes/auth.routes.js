@@ -1,5 +1,6 @@
 const express = require('express')
 const authController = require("../controllers/auth.controller")
+const authMiddleware = require("../middlewares/auth.middleware")
 
 const authRouter = express.Router()
 
@@ -30,6 +31,18 @@ authRouter.post("/login", authController.loginUserController)
  */
 
 authRouter.get("/logout", authController.logoutUserController)
+
+// creating another api, get-me => which will be used to get the details of the logged in user, and this api will be protected, means only authenticated user can access this api(this we will implement using a middleware, jo btayega ki kis user ki taraf se request aa rhi hai, and vo user logged in hai ya nahi), 
+// and this api will return the details of the logged in user
+
+/**
+ * @route GET /api/auth/get-me
+ * @description Get the current logged in user's details
+ * @access Private
+ */
+
+authRouter.get("/get-me", authMiddleware.authUser, authController.getMeController)  
+
 
 
 module.exports = authRouter
