@@ -1,6 +1,7 @@
 const userModel = require("../models/user.model")
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
+const tokenBlacklistModel = require("../models/blacklist.model")
 
 /**
  * @name registerUserController
@@ -106,6 +107,20 @@ async function loginUserController(req, res) {
     })
 }
 
+// now creating logout controller function, which will be used to logout the user, and this function will clear the token from the cookies, and also add that token in the blacklist, so that it cannot be used again
+async function logoutUserController(req, res){
+    const token = req.cookies.token  // pehle token ko cookies se get krna hoga
+    if(token){
+        await tokenBlacklistModel.create({token})  // phir us token ko blacklist me add krna hoga, jisse wo token future me use na ho sake
+    }
+    res.clearCookie("token")  // phir cookies se token ko clear krna hoga
+    res.status(200).json({
+        message: "User logged out successfully"
+    })
+}
+
 module.exports = {
-    registerUserController
+    registerUserController,
+    loginUserController,
+    logoutUserController
 }

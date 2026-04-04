@@ -14,5 +14,22 @@ const authRouter = express.Router()
 
 authRouter.post("/register", authController.registerUserController)
 
+/**
+ * @route POST /api/auth/login
+ * @description login user with email and password
+ * @access Public
+ */
+
+authRouter.post("/login", authController.loginUserController)
+
+// now, creating an another api for logout, which will be used to logout the user, and this api will be protected, means only authenticated user can access this api, and this api will remove the token from the cookies, and also add that token in the blacklist, so that it cannot be used again
+/**
+ * @route GET /api/auth/logout
+ * @description clear the token from cookies and add that token in blacklist, so that it cannot be used again
+ * @access public   // note, public access rkhne mein chances hote hai ki token kabhi na mile, aise mein hm bs cookie ko clear kr dege, token blacklist nahi karege
+ */
+
+authRouter.get("/logout", authController.logoutUserController)
+
 
 module.exports = authRouter
