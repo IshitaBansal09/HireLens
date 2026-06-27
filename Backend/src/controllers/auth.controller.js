@@ -36,7 +36,7 @@ async function registerUserController(req, res) {
     }
 
     // hashing password now 
-    const hash = await bcrypt.hash(password, 10)
+    const hash = await bcrypt.hash(password, 10)  // password => coming from req.body, and 10 => is the number of salt rounds, jisse password ko hash krne me time lagta hai, aur jitna zyada salt rounds hoga, utna zyada secure hoga, lekin utna hi zyada time bhi lagega, toh hum 10 salt rounds use kr rhe hai, jo ki ek common practice hai
     // now going to create a new user corresponding to this hash 
     const user = await userModel.create({
         username, 
