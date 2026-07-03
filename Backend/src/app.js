@@ -14,8 +14,10 @@ app.use(cors({
 
 // require all the routes here
 const authRouter = require("./routes/auth.routes")
+const interviewRouter = require("./routes/interview.routes")
 
 // using all the routes here
 app.use("/api/auth", authRouter)  // /api/auth is the prefix, and this needs to be used, whenever we want to access any api
+app.use("/api/interview", interviewRouter)
 
 module.exports = app
