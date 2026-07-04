@@ -12,7 +12,10 @@ const tokenBlacklistModel = require("../models/blacklist.model")
 async function registerUserController(req, res) {
     const { username, email, password } = req.body
 
+    req.log.info({ username, email }, "Registration attempt")
+
     if(!username || !email || !password) {
+        req.log.warn("Registration failed: missing required fields")
         return res.status(400).json({
             message : "Please provide username, email and password"
         })
@@ -24,11 +27,13 @@ async function registerUserController(req, res) {
 
     if(isUserAlreadyExists){
         if(isUserAlreadyExists.username == username){
+            req.log.warn({ username }, "Registration failed: username already taken")
             return res.status(400).json({
                 message: "Account already exists with this username"
             })
         }
         else{
+            req.log.warn({ email }, "Registration failed: email already registered")
             return res.status(400).json({
                 message: "Account already exists with this email address"
             })
@@ -51,8 +56,10 @@ async function registerUserController(req, res) {
         {expiresIn: "1d"}
     )
 
-    // now setting this created token to the cookies 
+    // now setting this created token to the cookies
     res.cookie("token", token)
+
+    req.log.info({ userId: user._id, username: user.username }, "User registered successfully")
 
     res.status(201).json({
         message : "User registered successfully",
@@ -73,8 +80,12 @@ async function registerUserController(req, res) {
 
 async function loginUserController(req, res) {
     const { email, password } = req.body
+
+    req.log.info({ email }, "Login attempt")
+
     const user = await userModel.findOne({email})  // email ke basis pr user ko find krna hoga, toh hum findOne method ka use kr rhe hai, aur usme email pass kr rhe hai, toh ye user ko find krke dega, jiska email address match hoga, agar koi user nahi milta hai, toh ye null return krega
     if(!user){
+        req.log.warn({ email }, "Login failed: user not found")
         return res.status(400).json({
             message: "User doesn't exists"
         })
@@ -84,6 +95,7 @@ async function loginUserController(req, res) {
     const isPasswordValid = await bcrypt.compare(password, user.password)  // password => coming from req.body, and user.password => password saved in database 
 
     if(!isPasswordValid){
+        req.log.warn({ userId: user._id }, "Login failed: invalid password")
         return res.status(400).json({
             message: "Invalid password"
         })
@@ -97,6 +109,9 @@ async function loginUserController(req, res) {
     )
 
     res.cookie("token", token)
+
+    req.log.info({ userId: user._id, username: user.username }, "User logged in successfully")
+
     res.status(201).json({
         message : "User logged in successfully",
         user:{
@@ -118,8 +133,12 @@ async function logoutUserController(req, res){
     const token = req.cookies.token  // pehle token ko cookies se get krna hoga
     if(token){
         await tokenBlacklistModel.create({token})  // phir us token ko blacklist me add krna hoga, jisse wo token future me use na ho sake
+        req.log.info("Token blacklisted on logout")
     }
     res.clearCookie("token")  // phir cookies se token ko clear krna hoga
+
+    req.log.info("User logged out successfully")
+
     res.status(200).json({
         message: "User logged out successfully"
     })
@@ -134,6 +153,16 @@ async function logoutUserController(req, res){
 
 async function getMeController(req, res){
     const user = await userModel.findById(req.user.id)  // req.user => is the data which we'll get from middleware
+
+    if(!user){
+        req.log.warn({ userId: req.user.id }, "getMe failed: user not found")
+        return res.status(404).json({
+            message: "User not found"
+        })
+    }
+
+    req.log.info({ userId: user._id }, "User details retrieved successfully")
+
     res.status(200).json({
         message : "User details retrieved successfully",
         user: {

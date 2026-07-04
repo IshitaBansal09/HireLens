@@ -1,5 +1,9 @@
 const {GoogleGenAI} = require("@google/genai")
 const {z} = require("zod")
+const logger = require("../config/logger")
+
+// dedicated child logger so all AI-related lines are tagged with a "module" field
+const log = logger.child({ module: "ai.service" })
 
 const ai = new GoogleGenAI({
     apiKey: process.env.GOOGLE_GENAI_API_KEY
@@ -35,18 +39,37 @@ async function generateInterviewReport({resume, selfDescription, jobDescription}
                         Resume: ${resume}
                         Self Description: ${selfDescription}
                         Job Description: ${jobDescription}
-                    `      
+                    `
 
-    const response = await ai.models.generateContent({
-        model : "gemini-3-flash-preview",
-        contents : prompt,
-        config : {
-            responseMimeType : "application/json",
-            responseSchema : z.toJSONSchema(interviewReportSchema)
-        }
-    })
+    const model = "gemini-2.5-flash"
+    log.info({ model, promptLength: prompt.length }, "Calling generative AI model")
 
-    return JSON.parse(response.text) 
+    const startTime = process.hrtime.bigint()
+    let response
+    try {
+        response = await ai.models.generateContent({
+            model,
+            contents : prompt,
+            config : {
+                responseMimeType : "application/json",
+                responseSchema : z.toJSONSchema(interviewReportSchema)
+            }
+        })
+    } catch (err) {
+        log.error({ err, model }, "Generative AI request failed")
+        throw err
+    }
+
+    const durationMs = Math.round(Number(process.hrtime.bigint() - startTime) / 1e6)
+    log.info({ model, durationMs }, "Generative AI response received")
+
+    try {
+        return JSON.parse(response.text)
+    } catch (err) {
+        // the model returned something that is not valid JSON => log a snippet to help debug
+        log.error({ err, responseSnippet: (response.text || "").slice(0, 500) }, "Failed to parse AI response as JSON")
+        throw err
+    }
 
 }
 

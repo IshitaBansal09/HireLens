@@ -1,0 +1,317 @@
+$accent: #e1034d;
+$accent-soft: #ff2d7a;
+$panel-bg: #14161c;
+$field-bg: #1a1d25;
+$border: #262a33;
+$muted: #7a808c;
+$muted-2: #9aa0ac;
+
+$sev-high: #ff4d6a;
+$sev-medium: #f5a524;
+$sev-low: #3ecf8e;
+
+.interview {
+    width: 100%;
+
+    display: grid;
+    grid-template-columns: 250px 1fr 300px;
+    grid-template-rows: minmax(100vh, auto);
+    align-content: start;
+
+    &__eyebrow {
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: $muted;
+        margin-bottom: 1rem;
+    }
+
+    &__nav {
+        border-right: 1px solid $border;
+        padding: 2rem 1.25rem;
+    }
+
+    &__content {
+        padding: 2rem 2.5rem;
+    }
+
+    &__aside {
+        border-left: 1px solid $border;
+        padding: 2rem 1.5rem;
+
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+}
+
+/* ---------- Left nav ---------- */
+.nav-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+
+    &__item {
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
+
+        padding: 0.7rem 0.85rem;
+        border-radius: 0.6rem;
+        color: $muted-2;
+        font-size: 0.9rem;
+        cursor: pointer;
+
+        transition: background-color 0.2s ease, color 0.2s ease;
+
+        &:hover {
+            background-color: $field-bg;
+            color: whitesmoke;
+        }
+
+        &--active {
+            background-color: rgba(225, 3, 77, 0.12);
+            border: 1px solid rgba(225, 3, 77, 0.35);
+            color: $accent-soft;
+            font-weight: 600;
+        }
+    }
+
+    &__icon {
+        display: inline-flex;
+        opacity: 0.9;
+    }
+}
+
+/* ---------- Center content ---------- */
+.content-head {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+
+    padding-bottom: 1.25rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid $border;
+
+    &__title {
+        font-size: 1.5rem;
+        font-weight: 700;
+    }
+
+    &__count {
+        font-size: 0.75rem;
+        color: $muted-2;
+        padding: 0.25rem 0.6rem;
+        border-radius: 999px;
+        background-color: $field-bg;
+        border: 1px solid $border;
+    }
+}
+
+.q-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+}
+
+.q-card {
+    background-color: $panel-bg;
+    border: 1px solid $border;
+    border-radius: 0.75rem;
+    overflow: hidden;
+
+    &__summary {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.85rem;
+
+        padding: 1rem 1.25rem;
+        cursor: pointer;
+        list-style: none;
+
+        &::-webkit-details-marker {
+            display: none;
+        }
+    }
+
+    &__marker {
+        flex-shrink: 0;
+        font-size: 0.7rem;
+        font-weight: 700;
+        color: $accent-soft;
+
+        width: 26px;
+        height: 26px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background-color: rgba(225, 3, 77, 0.12);
+    }
+
+    &__question {
+        flex: 1;
+        font-size: 0.92rem;
+        font-weight: 500;
+        line-height: 1.5;
+        color: #e8eaed;
+    }
+
+    &__chevron {
+        flex-shrink: 0;
+        display: inline-flex;
+        color: $muted;
+        transition: transform 0.2s ease;
+    }
+
+    &[open] &__chevron {
+        transform: rotate(180deg);
+    }
+
+    &__body {
+        padding: 0 1.25rem 1.25rem calc(1.25rem + 26px + 0.85rem);
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+    }
+
+    &__label {
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: $accent-soft;
+        margin-top: 0.5rem;
+    }
+
+    &__text {
+        font-size: 0.88rem;
+        line-height: 1.55;
+        color: $muted-2;
+    }
+}
+
+/* ---------- Right : match score ---------- */
+.score {
+    &__ring {
+        position: relative;
+        width: 120px;
+        height: 120px;
+        margin: 0 auto;
+
+        svg {
+            transform: rotate(-90deg);
+        }
+    }
+
+    &__track {
+        fill: none;
+        stroke: $field-bg;
+        stroke-width: 8;
+    }
+
+    &__value {
+        fill: none;
+        stroke: $sev-low;
+        stroke-width: 8;
+        stroke-linecap: round;
+    }
+
+    &__number {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.1rem;
+
+        strong {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        span {
+            font-size: 0.8rem;
+            color: $muted;
+            align-self: flex-start;
+            margin-top: 0.5rem;
+        }
+    }
+
+    &__caption {
+        text-align: center;
+        margin-top: 0.75rem;
+        font-size: 0.85rem;
+        color: $sev-low;
+    }
+}
+
+/* ---------- Right : skill gaps ---------- */
+.gap-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.gap-card {
+    padding: 0.7rem 0.9rem;
+    border-radius: 0.6rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    line-height: 1.35;
+
+    border: 1px solid;
+    border-left-width: 3px;
+
+    &--high {
+        color: $sev-high;
+        background-color: rgba(255, 77, 106, 0.1);
+        border-color: rgba(255, 77, 106, 0.35);
+        border-left-color: $sev-high;
+    }
+
+    &--medium {
+        color: $sev-medium;
+        background-color: rgba(245, 165, 36, 0.1);
+        border-color: rgba(245, 165, 36, 0.35);
+        border-left-color: $sev-medium;
+    }
+
+    &--low {
+        color: $sev-low;
+        background-color: rgba(62, 207, 142, 0.1);
+        border-color: rgba(62, 207, 142, 0.35);
+        border-left-color: $sev-low;
+    }
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 960px) {
+    .interview {
+        grid-template-columns: 1fr;
+
+        &__nav {
+            border-right: none;
+            border-bottom: 1px solid $border;
+        }
+
+        &__aside {
+            border-left: none;
+            border-top: 1px solid $border;
+        }
+
+        &__content {
+            padding: 1.5rem;
+        }
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .q-card__chevron,
+    .nav-list__item {
+        transition: none;
+    }
+}
