@@ -1,16 +1,25 @@
-import React from 'react'
-import "../style/interview.scss"
+import React from "react";
+import "../style/interview.scss";
 
 const Interview = () => {
   return (
-    <main className='interview'>
+    <main className="interview">
       {/* Left : section navigation */}
       <aside className="interview__nav">
         <p className="interview__eyebrow">Sections</p>
         <ul className="nav-list">
           <li className="nav-list__item">
             <span className="nav-list__icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg
+                viewBox="0 0 24 24"
+                width="16"
+                height="16"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
                 <path d="m8 9-3 3 3 3" />
                 <path d="m16 9 3 3-3 3" />
               </svg>
@@ -19,7 +28,16 @@ const Interview = () => {
           </li>
           <li className="nav-list__item nav-list__item--active">
             <span className="nav-list__icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg
+                viewBox="0 0 24 24"
+                width="16"
+                height="16"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
                 <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22z" />
               </svg>
             </span>
@@ -27,7 +45,16 @@ const Interview = () => {
           </li>
           <li className="nav-list__item">
             <span className="nav-list__icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg
+                viewBox="0 0 24 24"
+                width="16"
+                height="16"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
                 <path d="m3 11 19-9-9 19-2-8z" />
               </svg>
             </span>
@@ -48,11 +75,21 @@ const Interview = () => {
             <summary className="q-card__summary">
               <span className="q-card__marker">Q1</span>
               <span className="q-card__question">
-                Describe a time when you had to optimize a piece of code that was causing
-                production delays. How did you identify the bottleneck?
+                Describe a time when you had to optimize a piece of code that
+                was causing production delays. How did you identify the
+                bottleneck?
               </span>
               <span className="q-card__chevron" aria-hidden="true">
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="18"
+                  height="18"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
                   <path d="m6 9 6 6 6-6" />
                 </svg>
               </span>
@@ -60,13 +97,13 @@ const Interview = () => {
             <div className="q-card__body">
               <p className="q-card__label">Why they ask</p>
               <p className="q-card__text">
-                To understand the candidate's problem-solving approach, initiative, and the
-                measurable impact of their work.
+                To understand the candidate's problem-solving approach,
+                initiative, and the measurable impact of their work.
               </p>
               <p className="q-card__label">How to answer</p>
               <p className="q-card__text">
-                Use the STAR method. Detail the problem faced, the specific actions taken,
-                and the measurable results.
+                Use the STAR method. Detail the problem faced, the specific
+                actions taken, and the measurable results.
               </p>
             </div>
           </details>
@@ -75,11 +112,20 @@ const Interview = () => {
             <summary className="q-card__summary">
               <span className="q-card__marker">Q2</span>
               <span className="q-card__question">
-                How do you approach learning a new technology, such as your recent work with
-                the Gemini API?
+                How do you approach learning a new technology, such as your
+                recent work with the Gemini API?
               </span>
               <span className="q-card__chevron" aria-hidden="true">
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="18"
+                  height="18"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
                   <path d="m6 9 6 6 6-6" />
                 </svg>
               </span>
@@ -87,12 +133,13 @@ const Interview = () => {
             <div className="q-card__body">
               <p className="q-card__label">Why they ask</p>
               <p className="q-card__text">
-                To gauge commitment to continuous learning and proactive skill development.
+                To gauge commitment to continuous learning and proactive skill
+                development.
               </p>
               <p className="q-card__label">How to answer</p>
               <p className="q-card__text">
-                Mention specific resources and how you apply new learning in side projects
-                or current work.
+                Mention specific resources and how you apply new learning in
+                side projects or current work.
               </p>
             </div>
           </details>
@@ -126,15 +173,23 @@ const Interview = () => {
         <div className="skill-gaps">
           <p className="interview__eyebrow">Skill Gaps</p>
           <ul className="gap-list">
-            <li className="gap-card gap-card--high">Message Queues (Kafka/RabbitMQ)</li>
-            <li className="gap-card gap-card--medium">Advanced Docker &amp; CI/CD Pipelines</li>
-            <li className="gap-card gap-card--medium">Distributed Systems Design</li>
-            <li className="gap-card gap-card--low">Production-level Redis management</li>
+            <li className="gap-card gap-card--high">
+              Message Queues (Kafka/RabbitMQ)
+            </li>
+            <li className="gap-card gap-card--medium">
+              Advanced Docker &amp; CI/CD Pipelines
+            </li>
+            <li className="gap-card gap-card--medium">
+              Distributed Systems Design
+            </li>
+            <li className="gap-card gap-card--low">
+              Production-level Redis management
+            </li>
           </ul>
         </div>
       </aside>
     </main>
-  )
-}
+  );
+};
 
-export default Interview
+export default Interview;
