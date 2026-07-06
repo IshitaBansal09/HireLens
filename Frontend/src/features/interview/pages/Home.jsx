@@ -1,141 +1,252 @@
-import React from 'react'
-import "../style/home.scss"
+import React, { useState, useRef } from "react";
+import "../style/home.scss";
+import { useInterview } from "../hooks/useInterview";
+import { useNavigate } from "react-router";
 
 const Home = () => {
+  const { loading, generateReport, reports } = useInterview();
+  const [jobDescription, setJobDescription] = useState("");
+  const [selfDescription, setSelfDescription] = useState("");
+  const resumeInputRef = useRef();
+
+  const navigate = useNavigate();
+
+  const handleGenerateReport = async () => {
+    const resumeFile = resumeInputRef.current.files[0];
+    const data = await generateReport({
+      jobDescription,
+      selfDescription,
+      resumeFile,
+    });
+    if (data?._id) {
+      navigate(`/interview/${data._id}`);
+    }
+  };
+
+  if (loading) {
+    return (
+      <main className="loading-screen">
+        <h1>Loading your interview plan...</h1>
+      </main>
+    );
+  }
+
   return (
-    <main className='home'>
-      <header className="home__header">
-        <h1 className="home__title">
+    <div className="home-page">
+      {/* Page Header */}
+      <header className="page-header">
+        <h1>
           Create Your Custom <span className="highlight">Interview Plan</span>
         </h1>
-        <p className="home__subtitle">
-          Let our AI analyze the job requirements and your unique profile to build a
-          winning strategy.
+        <p>
+          Let our AI analyze the job requirements and your unique profile to
+          build a winning strategy.
         </p>
       </header>
 
-      <section className="plan-card">
-        <div className="plan-card__body">
-          {/* Left panel : Target Job Description */}
+      {/* Main Card */}
+      <div className="interview-card">
+        <div className="interview-card__body">
+          {/* Left Panel - Job Description */}
           <div className="panel panel--left">
-            <div className="panel__head">
-              <h2 className="panel__title">
-                <span className="panel__icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <rect x="2" y="7" width="20" height="14" rx="2" />
-                    <path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-                  </svg>
-                </span>
-                Target Job Description
-              </h2>
+            <div className="panel__header">
+              <span className="panel__icon">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <rect x="2" y="7" width="20" height="14" rx="2" />
+                  <path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                </svg>
+              </span>
+              <h2>Target Job Description</h2>
               <span className="badge badge--required">Required</span>
             </div>
-
-            <div className="textarea-wrap">
-              <textarea
-                className="field-textarea"
-                name="jobDescription"
-                id="jobDescription"
-                placeholder={'Paste the full job description here...\ne.g. "Senior Frontend Engineer at Google requires proficiency in React, TypeScript, and large-scale system design..."'}
-              />
-              <span className="char-counter">0 / 5000 chars</span>
-            </div>
+            <textarea
+              onChange={(e) => setJobDescription(e.target.value)}
+              className="panel__textarea"
+              placeholder={`Paste the full job description here...\ne.g. 'Senior Frontend Engineer at Google requires proficiency in React, TypeScript, and large-scale system design...'`}
+              maxLength={5000}
+            />
+            <div className="char-counter">0 / 5000 chars</div>
           </div>
 
-          {/* Divider */}
-          <div className="panel-divider" aria-hidden="true">
-            <span className="panel-divider__dot" />
-          </div>
+          {/* Vertical Divider */}
+          <div className="panel-divider" />
 
-          {/* Right panel : Your Profile */}
+          {/* Right Panel - Profile */}
           <div className="panel panel--right">
-            <div className="panel__head">
-              <h2 className="panel__title">
-                <span className="panel__icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                    <circle cx="12" cy="7" r="4" />
-                  </svg>
-                </span>
-                Your Profile
-              </h2>
+            <div className="panel__header">
+              <span className="panel__icon">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                  <circle cx="12" cy="7" r="4" />
+                </svg>
+              </span>
+              <h2>Your Profile</h2>
             </div>
 
-            <div className="field">
-              <p className="field__label">
-                Upload Resume <span className="field__hint">Most Reliable</span>
-              </p>
-
+            {/* Upload Resume */}
+            <div className="upload-section">
+              <label className="section-label">
+                Upload Resume
+                <span className="badge badge--best">Best Results</span>
+              </label>
               <label className="dropzone" htmlFor="resume">
-                <span className="dropzone__icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <span className="dropzone__icon">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="28"
+                    height="28"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
                     <path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242" />
                     <path d="M12 12v9" />
                     <path d="m8 17 4-4 4 4" />
                   </svg>
                 </span>
-                <span className="dropzone__primary">Click to upload or drag &amp; drop</span>
-                <span className="dropzone__secondary">PDF or DOCX (Max 5MB)</span>
-                <input hidden type="file" name="resume" id="resume" accept=".pdf,.docx" />
+                <p className="dropzone__title">
+                  Click to upload or drag &amp; drop
+                </p>
+                <p className="dropzone__subtitle">PDF or DOCX (Max 5MB)</p>
+                <input
+                  ref={resumeInputRef}
+                  hidden
+                  type="file"
+                  id="resume"
+                  name="resume"
+                  accept=".pdf,.docx"
+                />
               </label>
             </div>
 
-            <div className="or-divider" aria-hidden="true">
-              <span className="or-divider__line" />
-              <span className="or-divider__text">OR</span>
-              <span className="or-divider__line" />
+            {/* OR Divider */}
+            <div className="or-divider">
+              <span>OR</span>
             </div>
 
-            <div className="field">
-              <p className="field__label">Quick Self-Description</p>
+            {/* Quick Self-Description */}
+            <div className="self-description">
+              <label className="section-label" htmlFor="selfDescription">
+                Quick Self-Description
+              </label>
               <textarea
-                className="field-textarea field-textarea--short"
-                name="selfDescription"
+                onChange={(e) => setSelfDescription(e.target.value)}
                 id="selfDescription"
+                name="selfDescription"
+                className="panel__textarea panel__textarea--short"
                 placeholder="Briefly describe your experience, key skills, and years of experience if you don't have a resume handy..."
               />
             </div>
 
-            <div className="info-banner">
-              <span className="info-banner__icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            {/* Info Box */}
+            <div className="info-box">
+              <span className="info-box__icon">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
                   <circle cx="12" cy="12" r="10" />
                   <path d="M12 16v-4" />
                   <path d="M12 8h.01" />
                 </svg>
               </span>
-              <p className="info-banner__text">
-                Either a <strong>Resume</strong> or a <strong>Self Description</strong> is
-                required to generate a personalized plan.
+              <p>
+                Either a <strong>Resume</strong> or a{" "}
+                <strong>Self Description</strong> is required to generate a
+                personalized plan.
               </p>
             </div>
           </div>
         </div>
 
-        <div className="plan-card__footer">
-          <span className="plan-card__note">
+        {/* Card Footer */}
+        <div className="interview-card__footer">
+          <span className="footer-info">
             AI-Powered Strategy Generation &bull; Approx 30s
           </span>
-          <button className="button primary-button generate-btn">
-            <span className="generate-btn__icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M12 3v18" />
-                <path d="M5 10l7-7 7 7" />
-                <path d="M5 21h14" />
-              </svg>
-            </span>
+          <button onClick={handleGenerateReport} className="generate-btn">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M12 3v18" />
+              <path d="M5 10l7-7 7 7" />
+              <path d="M5 21h14" />
+            </svg>
             Generate My Interview Strategy
           </button>
         </div>
-      </section>
+      </div>
 
-      <footer className="home__footer">
-        <a href="#privacy">Privacy Policy</a>
-        <a href="#terms">Terms of Service</a>
-        <a href="#help">Help Center</a>
+      {/* Recent Reports List */}
+      {reports.length > 0 && (
+        <section className="recent-reports">
+          <h2>My Recent Interview Plans</h2>
+          <ul className="reports-list">
+            {reports.map((report) => (
+              <li
+                key={report._id}
+                className="report-item"
+                onClick={() => navigate(`/interview/${report._id}`)}
+              >
+                <h3>{report.title || "Untitled Position"}</h3>
+                <p className="report-meta">
+                  Generated on: {new Date(report.createdAt).toLocaleDateString()}
+                </p>
+                <p className={`match-score ${report.matchScore >= 80 ? 'match-score--high' : report.matchScore >= 60 ? 'match-score--mid' : 'match-score--low'}`}>
+                  Match Score: {report.matchScore}%
+                </p>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {/* Page Footer */}
+      <footer className="page-footer">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Help Center</a>
       </footer>
-    </main>
-  )
-}
+    </div>
+  );
+};
 
-export default Home
+export default Home;

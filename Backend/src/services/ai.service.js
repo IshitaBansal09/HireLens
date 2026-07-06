@@ -1,6 +1,7 @@
 const {GoogleGenAI} = require("@google/genai")
 const {z} = require("zod")
 const logger = require("../config/logger")
+const puppeteer = require("puppeteer")
 
 // dedicated child logger so all AI-related lines are tagged with a "module" field
 const log = logger.child({ module: "ai.service" })
@@ -30,7 +31,8 @@ const interviewReportSchema = z.object({
         day: z.number().describe("The day number of the preparation plan, starting from 1"),
         focus: z.string().describe("The focus area for that day, what to focus on and what to improve upon"),
         tasks: z.array(z.string()).describe("The tasks to be done on that day, what to do and how to do it")
-    })).describe("The preparation plan for the candidate, with day-wise focus areas and tasks to be done.")
+    })).describe("The preparation plan for the candidate, with day-wise focus areas and tasks to be done."),
+    title: z.string().describe("The title of the job for which the interview report is generated")
 })
 
 async function generateInterviewReport({resume, selfDescription, jobDescription}){
@@ -73,4 +75,42 @@ async function generateInterviewReport({resume, selfDescription, jobDescription}
 
 }
 
-module.exports = generateInterviewReport
+async function generatePdfFromHtml(htmlContent){
+    const browser = await puppeteer.launch()
+    const page = await browser.newPage()
+    await page.setContent(htmlContent, { waitUntil: 'networkidle0' })
+
+    const pdfBuffer = await page.pdf({ format: 'A4' })
+    await browser.close()
+    return pdfBuffer
+}
+
+async function generateResumePdf({resume, selfDescription, jobDescription}){
+
+    const resumePdfSchema = z.object({
+        html: z.string().describe("The HTML content of the resume which can be converted to PDF using any library like puppeteer")
+    })
+
+    const prompt = `Generate a resume in HTML format for a candidate based on the following information:
+                        Resume: ${resume}
+                        Self Description: ${selfDescription}
+                        Job Description: ${jobDescription}
+
+                        the response should be a valid JSON object with a single key "html" which contains the HTML content of the resume which can be converted to PDF using any library like puppeteer
+                    `
+    const response = await ai.models.generateContent({
+        model: "gemini-3-flash-preview",
+        contents : prompt,
+        config : {
+            responseMimeType : "application/json",
+            responseSchema : z.toJSONSchema(resumePdfSchema)
+        }
+    })
+
+    const jsonContent = JSON.parse(response.text)
+    const pdfBuffer = await generatePdfFromHtml(jsonContent.html)
+
+    return pdfBuffer
+}
+
+module.exports = {generateInterviewReport, generateResumePdf}

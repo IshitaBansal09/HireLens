@@ -5,66 +5,75 @@ $field-bg: #1a1d25;
 $border: #262a33;
 $muted: #7a808c;
 $muted-2: #9aa0ac;
+$text: #e8eaed;
 
 $sev-high: #ff4d6a;
 $sev-medium: #f5a524;
 $sev-low: #3ecf8e;
 
-.interview {
+/* ── Page shell ─────────────────────────────────────────────── */
+.interview-page {
     width: 100%;
     min-height: 100vh;
-
-    display: grid;
-    grid-template-columns: 250px 1fr 300px;
-    align-items: start;
-    align-content: start;
-
-    &__eyebrow {
-        font-size: 0.72rem;
-        font-weight: 600;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-        color: $muted;
-        margin-bottom: 1rem;
-    }
-
-    &__nav {
-        min-height: 100vh;
-        border-right: 1px solid $border;
-        padding: 2rem 1.25rem;
-    }
-
-    &__content {
-        padding: 2rem 2.5rem;
-    }
-
-    &__aside {
-        min-height: 100vh;
-        border-left: 1px solid $border;
-        padding: 2rem 1.5rem;
-
-        display: flex;
-        flex-direction: column;
-        gap: 2rem;
-    }
+    color: $text;
 }
 
-/* ---------- Left nav ---------- */
-.nav-list {
-    list-style: none;
+.interview-layout {
+    display: grid;
+    grid-template-columns: 250px 1px 1fr 1px 300px;
+    align-items: start;
+    min-height: 100vh;
+}
+
+.interview-divider {
+    align-self: stretch;
+    background-color: $border;
+}
+
+/* ── Shared eyebrow label ───────────────────────────────────── */
+%eyebrow {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: $muted;
+    margin-bottom: 1rem;
+}
+
+/* ── Left nav ───────────────────────────────────────────────── */
+.interview-nav {
+    min-height: 100vh;
+    padding: 2rem 1.25rem;
+
     display: flex;
     flex-direction: column;
-    gap: 0.35rem;
+    justify-content: space-between;
+    gap: 2rem;
+
+    .nav-content {
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+    }
+
+    &__label {
+        @extend %eyebrow;
+    }
 
     &__item {
         display: flex;
         align-items: center;
         gap: 0.65rem;
+        width: 100%;
+        text-align: left;
 
         padding: 0.7rem 0.85rem;
+        border: 1px solid transparent;
         border-radius: 0.6rem;
+        background-color: transparent;
         color: $muted-2;
         font-size: 0.9rem;
+        font-family: inherit;
         cursor: pointer;
 
         transition: background-color 0.2s ease, color 0.2s ease;
@@ -76,7 +85,7 @@ $sev-low: #3ecf8e;
 
         &--active {
             background-color: rgba(225, 3, 77, 0.12);
-            border: 1px solid rgba(225, 3, 77, 0.35);
+            border-color: rgba(225, 3, 77, 0.35);
             color: $accent-soft;
             font-weight: 600;
         }
@@ -88,8 +97,13 @@ $sev-low: #3ecf8e;
     }
 }
 
-/* ---------- Center content ---------- */
-.content-head {
+/* ── Center content ─────────────────────────────────────────── */
+.interview-content {
+    padding: 2rem 2.5rem;
+    min-width: 0;
+}
+
+.content-header {
     display: flex;
     align-items: center;
     gap: 0.75rem;
@@ -98,7 +112,7 @@ $sev-low: #3ecf8e;
     margin-bottom: 1.5rem;
     border-bottom: 1px solid $border;
 
-    &__title {
+    h2 {
         font-size: 1.5rem;
         font-weight: 700;
     }
@@ -113,6 +127,7 @@ $sev-low: #3ecf8e;
     }
 }
 
+/* ── Question cards ─────────────────────────────────────────── */
 .q-list {
     display: flex;
     flex-direction: column;
@@ -125,21 +140,16 @@ $sev-low: #3ecf8e;
     border-radius: 0.75rem;
     overflow: hidden;
 
-    &__summary {
+    &__header {
         display: flex;
         align-items: flex-start;
         gap: 0.85rem;
 
         padding: 1rem 1.25rem;
         cursor: pointer;
-        list-style: none;
-
-        &::-webkit-details-marker {
-            display: none;
-        }
     }
 
-    &__marker {
+    &__index {
         flex-shrink: 0;
         font-size: 0.7rem;
         font-weight: 700;
@@ -159,7 +169,7 @@ $sev-low: #3ecf8e;
         font-size: 0.92rem;
         font-weight: 500;
         line-height: 1.5;
-        color: #e8eaed;
+        color: $text;
     }
 
     &__chevron {
@@ -167,99 +177,203 @@ $sev-low: #3ecf8e;
         display: inline-flex;
         color: $muted;
         transition: transform 0.2s ease;
-    }
 
-    &[open] &__chevron {
-        transform: rotate(180deg);
+        &--open {
+            transform: rotate(180deg);
+        }
     }
 
     &__body {
         padding: 0 1.25rem 1.25rem calc(1.25rem + 26px + 0.85rem);
         display: flex;
         flex-direction: column;
-        gap: 0.35rem;
+        gap: 1rem;
     }
 
-    &__label {
-        font-size: 0.72rem;
-        font-weight: 600;
+    &__section {
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+
+        p {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            color: $muted-2;
+        }
+    }
+
+    &__tag {
+        align-self: flex-start;
+        font-size: 0.68rem;
+        font-weight: 700;
         letter-spacing: 0.06em;
         text-transform: uppercase;
-        color: $accent-soft;
-        margin-top: 0.5rem;
-    }
 
-    &__text {
-        font-size: 0.88rem;
-        line-height: 1.55;
-        color: $muted-2;
+        padding: 0.2rem 0.55rem;
+        border-radius: 999px;
+        border: 1px solid;
+
+        &--intention {
+            color: $sev-medium;
+            background-color: rgba(245, 165, 36, 0.1);
+            border-color: rgba(245, 165, 36, 0.35);
+        }
+
+        &--answer {
+            color: $sev-low;
+            background-color: rgba(62, 207, 142, 0.1);
+            border-color: rgba(62, 207, 142, 0.35);
+        }
     }
 }
 
-/* ---------- Right : match score ---------- */
-.score {
+/* ── Road map ───────────────────────────────────────────────── */
+.roadmap-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+}
+
+.roadmap-day {
+    background-color: $panel-bg;
+    border: 1px solid $border;
+    border-radius: 0.75rem;
+    padding: 1.1rem 1.25rem;
+
+    &__header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 0.85rem;
+    }
+
+    &__badge {
+        flex-shrink: 0;
+        font-size: 0.7rem;
+        font-weight: 700;
+        color: $accent-soft;
+        padding: 0.25rem 0.6rem;
+        border-radius: 999px;
+        background-color: rgba(225, 3, 77, 0.12);
+        border: 1px solid rgba(225, 3, 77, 0.35);
+    }
+
+    &__focus {
+        font-size: 1rem;
+        font-weight: 600;
+        color: $text;
+    }
+
+    &__tasks {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 0.55rem;
+
+        li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.65rem;
+            font-size: 0.88rem;
+            line-height: 1.5;
+            color: $muted-2;
+        }
+    }
+
+    &__bullet {
+        flex-shrink: 0;
+        width: 6px;
+        height: 6px;
+        margin-top: 0.5rem;
+        border-radius: 50%;
+        background-color: $accent-soft;
+    }
+}
+
+/* ── Right sidebar ──────────────────────────────────────────── */
+.interview-sidebar {
+    min-height: 100vh;
+    padding: 2rem 1.5rem;
+
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.sidebar-divider {
+    height: 1px;
+    background-color: $border;
+}
+
+/* Match score */
+.match-score {
+    align-items: flex-start;
+
+    &__label {
+        @extend %eyebrow;
+    }
+
     &__ring {
         position: relative;
         width: 120px;
         height: 120px;
-        margin: 0 auto;
+        margin: 0 auto 0.75rem;
+        border-radius: 50%;
 
-        svg {
-            transform: rotate(-90deg);
-        }
-    }
-
-    &__track {
-        fill: none;
-        stroke: $field-bg;
-        stroke-width: 8;
-    }
-
-    &__value {
-        fill: none;
-        stroke: $sev-low;
-        stroke-width: 8;
-        stroke-linecap: round;
-    }
-
-    &__number {
-        position: absolute;
-        inset: 0;
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 0.1rem;
 
-        strong {
-            font-size: 2rem;
-            font-weight: 700;
+        background: conic-gradient(currentColor 0deg, currentColor calc(var(--score, 88) * 3.6deg), $field-bg 0deg);
+
+        &::before {
+            content: "";
+            position: absolute;
+            inset: 8px;
+            border-radius: 50%;
+            background-color: #0f1116;
         }
 
-        span {
-            font-size: 0.8rem;
-            color: $muted;
-            align-self: flex-start;
-            margin-top: 0.5rem;
-        }
+        &.score--high { color: $sev-low; }
+        &.score--mid { color: $sev-medium; }
+        &.score--low { color: $sev-high; }
     }
 
-    &__caption {
-        text-align: center;
+    &__value {
+        position: relative;
+        font-size: 2rem;
+        font-weight: 700;
+        color: $text;
+    }
+
+    &__pct {
+        position: relative;
+        font-size: 0.8rem;
+        color: $muted;
+        align-self: flex-start;
         margin-top: 0.75rem;
+    }
+
+    &__sub {
         font-size: 0.85rem;
-        color: $sev-low;
+        color: $muted-2;
     }
 }
 
-/* ---------- Right : skill gaps ---------- */
-.gap-list {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
+/* Skill gaps */
+.skill-gaps {
+    &__label {
+        @extend %eyebrow;
+    }
+
+    &__list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+    }
 }
 
-.gap-card {
+.skill-tag {
     padding: 0.7rem 0.9rem;
     border-radius: 0.6rem;
     font-size: 0.82rem;
@@ -291,32 +405,30 @@ $sev-low: #3ecf8e;
     }
 }
 
-/* ---------- Responsive ---------- */
+/* ── Responsive ─────────────────────────────────────────────── */
 @media (max-width: 960px) {
-    .interview {
+    .interview-layout {
         grid-template-columns: 1fr;
+    }
 
-        &__nav {
-            min-height: 0;
-            border-right: none;
-            border-bottom: 1px solid $border;
-        }
+    .interview-divider {
+        height: 1px;
+        width: 100%;
+    }
 
-        &__aside {
-            min-height: 0;
-            border-left: none;
-            border-top: 1px solid $border;
-        }
+    .interview-nav,
+    .interview-sidebar {
+        min-height: 0;
+    }
 
-        &__content {
-            padding: 1.5rem;
-        }
+    .interview-content {
+        padding: 1.5rem;
     }
 }
 
 @media (prefers-reduced-motion: reduce) {
     .q-card__chevron,
-    .nav-list__item {
+    .interview-nav__item {
         transition: none;
     }
 }
