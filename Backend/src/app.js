@@ -13,7 +13,7 @@ app.use(requestLogger)
 app.use(express.json())
 app.use(cookieParser())
 app.use(cors({
-    origin: ["http://localhost:5173", "http://localhost:5180"],
+    origin: ["http://localhost:5173", "http://localhost:5180", "https://hire-lens-hazel.vercel.app"],  // frontend ke url ko allow krna hoga, taki frontend se backend ko access kr paye
     credentials: true
 }))
 
