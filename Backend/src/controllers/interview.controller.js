@@ -86,8 +86,9 @@ async function getAllInterviewReportsController(req, res){
  */
 async function generateResumePdfController(req, res){
     const {interviewReportId} = req.params
+    const regenerate = req.query.regenerate === "true"
 
-    const interviewReport = await interviewReportModel.findById(interviewReportId)
+    const interviewReport = await interviewReportModel.findOne({_id: interviewReportId, user: req.user.id}).select("+resumePdf")
 
     if(!interviewReport){
         return res.status(404).json({
@@ -95,8 +96,17 @@ async function generateResumePdfController(req, res){
         })
     }
 
-    const {resume, jobDescription, selfDescription} = interviewReport
-    const pdfBuffer = await generateResumePdf({resume, jobDescription, selfDescription})
+    let pdfBuffer = interviewReport.resumePdf
+
+    if(pdfBuffer?.length && !regenerate){
+        req.log.info({ reportId: interviewReportId }, "Serving cached resume PDF")
+    }else{
+        req.log.info({ reportId: interviewReportId, regenerate }, "Generating resume PDF")
+        const {resume, jobDescription, selfDescription} = interviewReport
+        pdfBuffer = Buffer.from(await generateResumePdf({resume, jobDescription, selfDescription}))
+
+        await interviewReportModel.updateOne({_id: interviewReportId}, {resumePdf: pdfBuffer})
+    }
 
     res.set({
         "content-type": "application/pdf",

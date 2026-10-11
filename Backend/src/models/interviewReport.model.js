@@ -131,6 +131,11 @@ const interviewReportSchema = new mongoose.Schema({
     title : {
         type : String,
         required : [true, "Job title is required"]
+    },
+    // cached tailored resume PDF, generated once on first download
+    resumePdf : {
+        type : Buffer,
+        select : false
     }
 },{
     timestamps : true

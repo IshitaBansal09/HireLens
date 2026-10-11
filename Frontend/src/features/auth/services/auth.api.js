@@ -1,8 +1,8 @@
 // API Layer
-import axios from "axios"
+import axios from "axios"  
 
 const api = axios.create({
-    baseURL: "https://hirelens-6gdy.onrender.com",
+    baseURL: import.meta.env.VITE_API_URL,
     withCredentials: true
 })
 
@@ -18,7 +18,7 @@ export async function register({username, email, password}){
 
     } catch(err){
 
-        console.log(err)
+        return { error: err.response?.data?.message || "Registration failed. Please try again." }
 
     }
 }
@@ -35,7 +35,7 @@ export async function login({email, password}){
 
     } catch(err){
 
-        console.log(err)
+        return { error: err.response?.data?.message || "Login failed. Please try again." }
 
     }
 }

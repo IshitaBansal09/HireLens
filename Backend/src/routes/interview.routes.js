@@ -31,7 +31,8 @@ interviewRouter.get("/", authMiddleware.authUser, interviewController.getAllInte
 
 /**
  * @route GET /api/interview/resume/pdf
- * @description generate resume pdf based on user self description, resume content and job description
+ * @description generate resume pdf based on user self description, resume content and job description.
+ * The pdf is cached on the report after the first generation; pass ?regenerate=true to replace it with a fresh one
  * @access private
  */
 
