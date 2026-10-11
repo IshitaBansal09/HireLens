@@ -3,6 +3,16 @@ const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 const tokenBlacklistModel = require("../models/blacklist.model")
 
+// frontend (vercel.app) and backend (onrender.com) are different sites, so in production the cookie
+// must be SameSite=None + Secure, otherwise the browser never sends it back on API requests.
+// Render sets RENDER=true automatically; locally we keep the default Lax cookie over http.
+const isProduction = process.env.NODE_ENV === "production" || process.env.RENDER === "true"
+const cookieOptions = {
+    httpOnly: true,
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax"
+}
+
 /**
  * @name registerUserController
  * @description Register a new user, expects username, email and password in request body
@@ -57,7 +67,7 @@ async function registerUserController(req, res) {
     )
 
     // now setting this created token to the cookies
-    res.cookie("token", token)
+    res.cookie("token", token, cookieOptions)
 
     req.log.info({ userId: user._id, username: user.username }, "User registered successfully")
 
@@ -108,7 +118,7 @@ async function loginUserController(req, res) {
         {expiresIn: "1d"}
     )
 
-    res.cookie("token", token)
+    res.cookie("token", token, cookieOptions)
 
     req.log.info({ userId: user._id, username: user.username }, "User logged in successfully")
 
@@ -135,7 +145,7 @@ async function logoutUserController(req, res){
         await tokenBlacklistModel.create({token})  // phir us token ko blacklist me add krna hoga, jisse wo token future me use na ho sake
         req.log.info("Token blacklisted on logout")
     }
-    res.clearCookie("token")  // phir cookies se token ko clear krna hoga
+    res.clearCookie("token", cookieOptions)  // phir cookies se token ko clear krna hoga
 
     req.log.info("User logged out successfully")
 
